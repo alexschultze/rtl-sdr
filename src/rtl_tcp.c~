@@ -235,7 +235,7 @@ void rtlsdr_callback(unsigned char *buf, uint32_t len, void *ctx)
 {
 
 	if(!do_exit) {
-		struct llist *rpt = (struct llist*)malloc(sizeof(struct llist));
+		struct llist* rpt = (struct llist*)malloc(sizeof(struct llist));
 		
 		fprintf(stderr, "*");
 
