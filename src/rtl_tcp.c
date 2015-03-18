@@ -237,9 +237,22 @@ void rtlsdr_callback(unsigned char *buf, uint32_t len, void *ctx)
 	if(!do_exit) {
 		struct llist *rpt = (struct llist*)malloc(sizeof(struct llist));
 		rpt->data = (char*)malloc(len);
+
+		if(rpt==NULL){
+		fprintf(stderr, "WARNING: Could not malloc linked list! Package dropped.");
+		return;
+		}
+
+		if(rpt->data ==NULL){
+		fprintf(stderr, "WARNING: Could not malloc buffer! Package dropped.");
+		free(rpt);
+		return;
+		}
+
 		memcpy(rpt->data, buf, len);
 		rpt->len = len;
 		rpt->next = NULL;
+		
 
 		pthread_mutex_lock(&ll_mutex);
 
