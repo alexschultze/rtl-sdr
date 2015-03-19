@@ -703,11 +703,13 @@ int main(int argc, char **argv)
 			free(prev);
 		}
 
+		r = rtlsdr_cancel_async(dev);
 		do_exit = 0;
 		global_numq = 0;
 	}
 
 out:
+	
 	rtlsdr_close(dev);
 	closesocket(listensocket);
 	closesocket(s);
