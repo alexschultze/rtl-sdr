@@ -237,7 +237,7 @@ void rtlsdr_callback(unsigned char *buf, uint32_t len, void *ctx)
 	if(!do_exit) {
 		struct llist *rpt = (struct llist*)malloc(sizeof(struct llist));
 		
-		fprintf(stderr, "*");
+		fprintf(stderr, "bufaddr:%x len: %d \n",*buf,len);
 
 		if(rpt==NULL){
 		fprintf(stderr, "WARNING: Could not malloc linked list! Package dropped.\n");
