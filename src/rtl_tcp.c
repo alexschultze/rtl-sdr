@@ -607,10 +607,7 @@ int main(int argc, char **argv)
 			fprintf(stderr, "Tuner gain set to %f dB.\n", gain/10.0);
 	}
 
-	/* Reset endpoint before we start reading from it (mandatory) */
-	r = rtlsdr_reset_buffer(dev);
-	if (r < 0)
-		fprintf(stderr, "WARNING: Failed to reset buffers.\n");
+
 
 	pthread_mutex_init(&exit_cond_lock, NULL);
 	pthread_mutex_init(&ll_mutex, NULL);
@@ -660,6 +657,11 @@ int main(int argc, char **argv)
 			}
 		}
 
+		/* Reset endpoint before we start reading from it (mandatory) */
+		r = rtlsdr_reset_buffer(dev);
+		if (r < 0)
+		fprintf(stderr, "WARNING: Failed to reset buffers.\n");
+
 		setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&ling, sizeof(ling));
 
 		printf("client accepted!\n");
@@ -703,7 +705,8 @@ int main(int argc, char **argv)
 			free(prev);
 		}
 
-		r = rtlsdr_cancel_async(dev);
+		//r = rtlsdr_cancel_async(dev);
+
 		do_exit = 0;
 		global_numq = 0;
 	}
