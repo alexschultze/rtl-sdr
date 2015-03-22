@@ -237,7 +237,21 @@ void rtlsdr_callback(unsigned char *buf, uint32_t len, void *ctx)
 	if(!do_exit) {
 		struct llist *rpt = (struct llist*)malloc(sizeof(struct llist));
 		
-		fprintf(stderr, "bufaddr:%x len: %d \n",*buf,len);
+		int i;
+		unsigned int checksum=0;
+
+		/* Test code, lets see some info about this buffer */
+		for (i=0; i<(int)len; i++) {
+		checksum +=buf[i];
+#if 0
+		buf[i]= len%255; // Fill the buffer with consecutive numbers for DEBUG
+#endif
+		}
+
+
+
+
+		fprintf(stderr, "bufaddr:%p |%02x %02x %02x %02x| csum: %d | len: %d \n",(void*)&buf,buf[0],buf[1],buf[2],buf[3],checksum,len);
 
 		if(rpt==NULL){
 		fprintf(stderr, "WARNING: Could not malloc linked list! Package dropped.\n");
@@ -255,7 +269,6 @@ void rtlsdr_callback(unsigned char *buf, uint32_t len, void *ctx)
 		memcpy(rpt->data, buf, len);
 		rpt->len = len;
 		rpt->next = NULL;
-		
 
 		pthread_mutex_lock(&ll_mutex);
 
@@ -306,6 +319,11 @@ static void *tcp_worker(void *arg)
 	struct timeval tp;
 	fd_set writefds;
 	int r = 0;
+
+	/* Wait for a short time before starting to send out samples, 500ms */
+	#ifndef _WIN32
+	usleep(500*1000);
+	#endif
 
 	while(1) {
 		if(do_exit)
