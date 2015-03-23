@@ -357,6 +357,8 @@ static void *tcp_worker(void *arg)
 				r = select(s+1, NULL, &writefds, NULL, &tv);
 				if(r) {
 					bytessent = send(s,  &curelem->data[index], bytesleft, 0);
+					if (bytessent<0)
+					fprintf(stderr, "WARNING: Failed sending bytes.\n");
 					bytesleft -= bytessent;
 					index += bytessent;
 				}
